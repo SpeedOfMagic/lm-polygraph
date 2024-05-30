@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 from sklearn.model_selection import train_test_split
-from datasets import load_dataset, Dataset as hf_dataset
+from datasets import load_dataset, Dataset as hf_dataset, DatasetDict
 
 from typing import Iterable, Tuple, List
 
@@ -131,7 +131,11 @@ class Dataset:
         load_from_disk = kwargs.pop("load_from_disk", False)
         if load_from_disk:
             dataset_name = path
-            dataset = hf_dataset.load_from_disk(path)
+            print(path, split)
+            if "allenai" in path:
+                dataset = hf_dataset.load_from_disk(path)
+            else:
+                dataset = DatasetDict.load_from_disk(path)[split]
         elif isinstance(path, str):
             dataset_name = path
             dataset = load_dataset(path, split=split, **kwargs)

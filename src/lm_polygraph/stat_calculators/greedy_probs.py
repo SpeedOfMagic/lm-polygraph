@@ -7,6 +7,10 @@ from .embeddings import get_embeddings_from_output
 from .stat_calculator import StatCalculator
 from lm_polygraph.utils.model import WhiteboxModel, BlackboxModel
 
+import os
+
+EVALUATE_ONLY_ANSWER = os.environ.get("EVALUATE_ONLY_ANSWER", "false") == "true"
+
 
 class BlackboxGreedyTextsCalculator(StatCalculator):
     """
@@ -119,6 +123,36 @@ class GreedyProbsCalculator(StatCalculator):
                     ]
                 ),
             )
+            
+            if EVALUATE_ONLY_ANSWER:
+                answer_tokens = model.tokenize(['The answer is '])['input_ids'][0, 1:].to(model.device())
+                print('Model answer:', model.tokenizer.decode(out['sequences'][0, batch['input_ids'].shape[1]:]))
+                print('Model answer in tokens:', out['sequences'][0, batch['input_ids'].shape[1]:])
+                print('Model answer size (in tokens):', len(out['sequences'][0, batch['input_ids'].shape[1]:]))
+                print('Answer tokens:', answer_tokens)
+                cutoff = None
+                #import pdb; pdb.set_trace()
+                for i in range(batch['input_ids'].shape[1], out['sequences'].shape[1] - len(answer_tokens)):
+                    if torch.equal(out['sequences'][0, i:i + len(answer_tokens)], answer_tokens):
+                        cutoff = i + len(answer_tokens)
+                        break
+                print('Cutoff =', cutoff)
+                if cutoff is None:
+                    return {
+                        "input_texts": texts,
+                        "input_tokens": batch["input_ids"].to("cpu").tolist(),
+                        "greedy_log_probs": [],
+                        "greedy_tokens": [],
+                        "greedy_tokens_alternatives": [],
+                        "greedy_texts": [""],
+                        "greedy_log_likelihoods": [],
+                    }
+                else:
+                    out.sequences = out.sequences[:, cutoff:]
+                    out.scores = out.scores[cutoff - batch['input_ids'].shape[1]:]
+                    out.hidden_states = out.hidden_states[cutoff - batch['input_ids'].shape[1]:]
+                    # import pdb; pdb.set_trace()
+
             logits = torch.stack(out.scores, dim=1)
 
             sequences = out.sequences
@@ -131,7 +165,9 @@ class GreedyProbsCalculator(StatCalculator):
         cut_texts = []
         cut_alternatives = []
         for i in range(len(texts)):
-            if model.model_type == "CausalLM":
+            if EVALUATE_ONLY_ANSWER:
+                seq = sequences[i]
+            elif model.model_type == "CausalLM":
                 idx = batch["input_ids"].shape[1]
                 seq = sequences[i, idx:].cpu()
             else:
@@ -187,5 +223,6 @@ class GreedyProbsCalculator(StatCalculator):
             "greedy_log_likelihoods": ll,
         }
         result_dict.update(embeddings_dict)
+        print('done batch')
 
         return result_dict

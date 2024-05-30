@@ -29,8 +29,8 @@ class BartScoreCalculator(StatCalculator):
         self.lsm = None
 
     def _setup(self):
-        self.tokenizer = BartTokenizer.from_pretrained(self.checkpoint)
-        self.model = BartForConditionalGeneration.from_pretrained(self.checkpoint)
+        self.tokenizer = BartTokenizer.from_pretrained(self.checkpoint, cache_dir='/home/davasilev_4/cache')
+        self.model = BartForConditionalGeneration.from_pretrained(self.checkpoint, cache_dir='/home/davasilev_4/cache')
         self.model.eval()
         self.model.to(self.device)
 

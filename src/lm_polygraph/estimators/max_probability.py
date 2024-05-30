@@ -31,6 +31,8 @@ class MaximumSequenceProbability(Estimator):
                 Higher values indicate more uncertain samples.
         """
         log_likelihoods = stats["greedy_log_likelihoods"]
+        if len(log_likelihoods) == 0:
+            return np.array([np.nan])
         return np.array([-np.sum(log_likelihood) for log_likelihood in log_likelihoods])
 
 
@@ -58,6 +60,9 @@ class MaximumTokenProbability(Estimator):
                 Higher values indicate more uncertain samples.
         """
         log_likelihoods = stats["greedy_log_likelihoods"]
+        if len(log_likelihoods) == 0:
+            return np.array([np.nan])
+            
         return np.concatenate(
             [
                 -np.exp(np.array(log_likelihood[:-1]))

@@ -43,6 +43,11 @@ class GreedyLMProbsCalculator(StatCalculator):
                     P(y_t | y_<t) for all t.
         """
         tokens = dependencies["greedy_tokens"]
+        if len(tokens) == 0:
+            return {
+            "greedy_lm_log_probs": [],
+            "greedy_lm_log_likelihoods": [],
+        }
         try:
             batch = model.tokenize([model.tokenizer.decode(t) for t in tokens])
             batch = {k: v.to(model.device()) for k, v in batch.items()}

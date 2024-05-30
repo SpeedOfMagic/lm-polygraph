@@ -45,6 +45,8 @@ class MeanConditionalPointwiseMutualInformation(Estimator):
                 Higher values indicate more uncertain samples.
         """
         logprobs = stats["greedy_log_likelihoods"]
+        if len(logprobs) == 0:
+            return np.array([np.nan])
         lm_logprobs = stats["greedy_lm_log_likelihoods"]
         entropies = stats["entropy"]
         mi_scores = []
@@ -96,6 +98,8 @@ class ConditionalPointwiseMutualInformation(Estimator):
                 Higher values indicate more uncertain samples.
         """
         logprobs = stats["greedy_log_likelihoods"]
+        if len(logprobs) == 0:
+            return np.array([np.nan])
         lm_logprobs = stats["greedy_lm_log_likelihoods"]
         entropies = stats["entropy"]
         mi_scores = []

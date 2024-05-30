@@ -259,31 +259,6 @@ def get_ue_methods(args, model):
             MeanTokenEntropy(),
             MeanPointwiseMutualInformation(),
             MeanConditionalPointwiseMutualInformation(),
-            ClaimConditionedProbability(),
-            PTrue(),
-            PTrueSampling(),
-            MonteCarloSequenceEntropy(),
-            MonteCarloNormalizedSequenceEntropy(),
-            LexicalSimilarity(metric="rouge1"),
-            LexicalSimilarity(metric="rouge2"),
-            LexicalSimilarity(metric="rougeL"),
-            LexicalSimilarity(metric="BLEU"),
-            NumSemSets(),
-            EigValLaplacian(similarity_score="NLI_score", affinity="entail"),
-            EigValLaplacian(similarity_score="NLI_score", affinity="contra"),
-            EigValLaplacian(similarity_score="Jaccard_score"),
-            DegMat(similarity_score="NLI_score", affinity="entail"),
-            DegMat(similarity_score="NLI_score", affinity="contra"),
-            DegMat(similarity_score="Jaccard_score"),
-            Eccentricity(similarity_score="NLI_score", affinity="entail"),
-            Eccentricity(similarity_score="NLI_score", affinity="contra"),
-            Eccentricity(similarity_score="Jaccard_score"),
-            SemanticEntropy(),
-            SAR(),
-            TokenSAR(),
-            SentenceSAR(),
-            RenyiNeg(),
-            FisherRao(),
         ]
 
     if args.use_ens_ue:
@@ -331,21 +306,21 @@ def get_generation_metrics(args):
             RougeMetric("rouge1"),
             RougeMetric("rouge2"),
             RougeMetric("rougeL"),
-            BertScoreMetric('rh'),
-            SbertMetric(),
+            #BertScoreMetric('rh'),
+            #SbertMetric(),
             AccuracyMetric(
                 target_ignore_regex = getattr(args, "target_ignore_regex", None),
                 output_ignore_regex = getattr(args, "output_ignore_regex", None),
                 normalize = getattr(args, "normalize", False),
             ),
-            AlignScore(),
+            #AlignScore(),
         ]
         if args.task == "nmt":
             ignore_regex = getattr(args, "source_ignore_regex", None)
             result += [Comet(source_ignore_regex = ignore_regex)]
         if not getattr(args, "multiref", False):
             # Currently, BartScoreSeqMetric does not support multiref
-            result.append(BartScoreSeqMetric('rh'))
+            pass #result.append(BartScoreSeqMetric('rh'))
         else:
             # Wrap each metric in AggregatedMetric
             result = [AggregatedMetric(base_metric=metric) for metric in result]

@@ -1,11 +1,11 @@
 hydra:
   run:
-    dir: ${cache_path}/${task}/${model.path}/${dataset}/${now:%Y-%m-%d}/${now:%H-%M-%S}
+    dir: ./workdir/output/${task}/${model.path}/${dataset}/${now:%Y-%m-%d}/${now:%H-%M-%S}
 
 defaults:
   - model: bloomz-560m
 
-cache_path: ./workdir/output
+cache_path: /home/davasilev_4/cache
 save_path: '${hydra:run.dir}'
 
 task: qa

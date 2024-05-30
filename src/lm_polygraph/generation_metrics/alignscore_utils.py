@@ -43,7 +43,7 @@ class AlignScorer:
             device=device,
             verbose=verbose,
         )
-        nltk.download("punkt")
+        # nltk.download("punkt")
         self.model.nlg_eval_mode = evaluation_mode
 
     def score(self, contexts: List[str], claims: List[str]) -> List[float]:
@@ -53,7 +53,7 @@ class AlignScorer:
 class Inferencer:
     def __init__(
         self,
-        ckpt_path="https://huggingface.co/yzha/AlignScore/resolve/main/AlignScore-large.ckpt",  # added direct url from huggingface
+        ckpt_path="/home/davasilev_4/.cache/torch/hub/checkpoints/AlignScore-large.ckpt",  # added direct url from huggingface
         model="bert-base-uncased",
         batch_size=32,
         device="cuda",

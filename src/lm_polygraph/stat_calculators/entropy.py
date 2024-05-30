@@ -35,6 +35,8 @@ class EntropyCalculator(StatCalculator):
             Dict[str, np.ndarray]: dictionary with List[List[float]] entropies calculated at 'entropy' key.
         """
         logprobs = dependencies["greedy_log_probs"]
+        if len(logprobs) == 0:
+            return {"entropy": []}
         entropies = []
         for s_lp in logprobs:
             entropies.append([])

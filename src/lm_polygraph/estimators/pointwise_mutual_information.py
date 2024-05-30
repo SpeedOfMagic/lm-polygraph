@@ -34,6 +34,8 @@ class MeanPointwiseMutualInformation(Estimator):
         """
         logprobs = stats["greedy_log_likelihoods"]
         lm_logprobs = stats["greedy_lm_log_likelihoods"]
+        if len(logprobs) == 0:
+            return np.array([np.nan])
         mi_scores = []
         for lp, lm_lp in zip(logprobs, lm_logprobs):
             mi_scores.append([])
@@ -70,6 +72,8 @@ class PointwiseMutualInformation(Estimator):
         """
         logprobs = stats["greedy_log_likelihoods"]
         lm_logprobs = stats["greedy_lm_log_likelihoods"]
+        if len(logprobs) == 0:
+            return np.array([np.nan])
         mi_scores = []
         for lp, lm_lp in zip(logprobs, lm_logprobs):
             mi_scores.append([])

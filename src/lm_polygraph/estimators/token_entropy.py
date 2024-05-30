@@ -30,6 +30,8 @@ class MeanTokenEntropy(Estimator):
                 Higher values indicate more uncertain samples.
         """
         entropy = stats["entropy"]
+        if len(entropy) == 0:
+            return np.array([np.nan])
         return np.array([np.mean(e) for e in entropy])
 
 
@@ -58,4 +60,6 @@ class TokenEntropy(Estimator):
                 Higher values indicate more uncertain samples.
         """
         entropy = stats["entropy"]
+        if len(entropy) == 0:
+            return [np.nan]
         return np.concatenate([np.array(e[:-1]) for e in entropy])

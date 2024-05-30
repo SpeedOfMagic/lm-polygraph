@@ -14,4 +14,6 @@ class Perplexity(Estimator):
 
     def __call__(self, stats: Dict[str, np.ndarray]) -> np.ndarray:
         log_likelihoods = stats["greedy_log_likelihoods"]
+        if len(log_likelihoods) == 0:
+            return np.array([np.nan])
         return np.array([-np.mean(ll) for ll in log_likelihoods])
