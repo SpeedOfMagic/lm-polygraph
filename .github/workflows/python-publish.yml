@@ -30,12 +30,11 @@ jobs:
       run: |
         new_version=${{ github.event.release.tag_name }}
         new_version="${new_version:1}"
-
-        echo Package version will have new version $new_version
+        echo Package will have new version $new_version
+        
         tmp_file=$(mktemp)
         sed s/0.0.0/$new_version/ pyproject.toml > $tmp_file
         cat $tmp_file > pyproject.toml
-        cat pyproject.toml
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
