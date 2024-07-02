@@ -35,6 +35,7 @@ generation_metrics:
   - name: BartScoreSeqMetric
     args: ["rh"]
   - name: AccuracyMetric
+  - name: AlignScore
 
 additional_estimators: {
   'lm_polygraph.estimators.perplexity': ['Perplexity'],
